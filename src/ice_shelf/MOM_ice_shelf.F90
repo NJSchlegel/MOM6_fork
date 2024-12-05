@@ -1998,10 +1998,10 @@ subroutine initialize_ice_shelf(param_file, ocn_grid, Time, CS, diag, Time_init,
   if (CS%active_shelf_dynamics) then
     CS%id_h_mask = register_diag_field('ice_shelf_model', 'h_mask', CS%diag%axesT1, CS%Time, &
        'ice shelf thickness mask', 'none')
-    CS%id_shelf_sfc_mass_flux = register_diag_field('ice_shelf_model', 'sfc_mass_flux', CS%diag%axesT1, CS%Time, &
-       'ice shelf surface mass flux deposition from atmosphere', &
-       'kg m-2 s-1', conversion=US%RZ_T_to_kg_m2s)
   endif
+  CS%id_shelf_sfc_mass_flux = register_diag_field('ice_shelf_model', 'sfc_mass_flux', CS%diag%axesT1, CS%Time, &
+      'ice shelf surface mass flux deposition from atmosphere', &
+      'kg m-2 s-1', conversion=US%RZ_T_to_kg_m2s)
 
   !scalars (area integrated over all ice sheets)
   CS%id_vaf = register_scalar_field('ice_shelf_model', 'int_vaf', CS%diag%axesT1, CS%Time, &
@@ -2204,6 +2204,10 @@ subroutine initialize_ice_shelf_fluxes(CS, ocn_grid, US, fluxes_in)
     call deallocate_forcing_type(fluxes)
     deallocate(fluxes)
   endif
+
+  call register_restart_field(fluxes_in%shelf_sfc_mass_flux, "sfc_mass_flux", .true., CS%restart_CSp, &
+     "ice shelf surface mass flux deposition from atmosphere", &
+     'kg m-2 s-1', conversion=US%RZ_T_to_kg_m2s)
 
 end subroutine initialize_ice_shelf_fluxes
 
